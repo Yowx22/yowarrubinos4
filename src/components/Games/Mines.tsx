@@ -28,7 +28,7 @@ const Mines: React.FC = () => {
   // Calculate base multiplier based on mines count
   const getBaseMultiplier = (mines: number) => {
     const multipliers = {
-      1: 1.30, 2: 1.35, 3: 1.40, 4: 1.45, 5: 1.50,
+      1: 1.30, 2: 1.35, 3: 1.40, 4: 1.45, 5: 0.90,
       6: 1.55, 7: 1.60, 8: 1.65, 9: 1.70, 10: 1.75,
       11: 1.80, 12: 1.85, 13: 1.90, 14: 2.00, 15: 2.10,
       16: 2.20, 17: 2.35, 18: 2.50, 19: 2.70, 20: 3.00,
