@@ -99,7 +99,7 @@ const Header = ({ onLoginClick, onSignupClick }: HeaderProps) => {
     <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center bg-black">
       <div className="flex items-center">
         <div className="text-xl md:text-2xl font-bold tracking-wider text-spdm-green glow-text">
-          SPDM
+          MODS
         </div>
       </div>
       
