@@ -58,9 +58,13 @@ const Mines: React.FC = () => {
         .from('rigged_users')
         .select('win_chance')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
-      const winChance = riggedData?.win_chance || 0.5; // Default 50% win chance
+      if (riggedError) {
+        console.error('Error checking rigged status:', riggedError);
+      }
+
+      const winChance = riggedData?.win_chance ?? 0.5; // Default 50% win chance if not rigged
       const shouldWin = Math.random() < winChance;
 
       const newGrid: Cell[][] = Array(5).fill(null).map(() =>
