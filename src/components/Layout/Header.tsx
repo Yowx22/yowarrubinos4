@@ -54,7 +54,6 @@ const Header = ({ onLoginClick, onSignupClick }: HeaderProps) => {
         if (activeUsersError) throw activeUsersError;
         
         if (Array.isArray(activeUsers) && activeUsers.length > 0) {
-          // Extract user_ids from the activeUsers array
           const userIds = activeUsers.map(user => user.user_id);
           
           const { data: profilesData, error: profilesError } = await supabase
@@ -97,7 +96,7 @@ const Header = ({ onLoginClick, onSignupClick }: HeaderProps) => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center bg-black bg-opacity-40 backdrop-blur-sm">
+    <header className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center bg-black">
       <div className="flex items-center">
         <div className="text-xl md:text-2xl font-bold tracking-wider text-spdm-green glow-text">
           SPDM
@@ -168,7 +167,7 @@ const Header = ({ onLoginClick, onSignupClick }: HeaderProps) => {
         )}
         
         {showOnlineUsers && (
-          <div className="absolute top-16 right-20 bg-spdm-dark border border-spdm-green/30 rounded-lg shadow-lg p-3 min-w-[200px] max-h-[300px] overflow-y-auto animate-fade-in z-50">
+          <div className="absolute top-16 right-20 bg-black border border-spdm-green/30 rounded-lg shadow-lg p-3 min-w-[200px] max-h-[300px] overflow-y-auto animate-fade-in z-50">
             <h3 className="text-sm font-medium text-spdm-green mb-2">Online Users ({onlineUsers.length})</h3>
             <div className="space-y-2">
               {onlineUsers.length > 0 ? (
@@ -199,7 +198,7 @@ const Header = ({ onLoginClick, onSignupClick }: HeaderProps) => {
                 <ChevronDown size={16} className="text-gray-400" />
               </motion.div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-spdm-dark border border-spdm-green/30 text-white min-w-[180px] animate-fade-in">
+            <DropdownMenuContent className="bg-black border border-spdm-green/30 text-white min-w-[180px] animate-fade-in">
               <DropdownMenuLabel className="text-gray-400">My Account</DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-spdm-green/20" />
               <DropdownMenuItem 
@@ -218,7 +217,7 @@ const Header = ({ onLoginClick, onSignupClick }: HeaderProps) => {
                     onClick={() => navigate('/admin')}
                   >
                     <Shield size={16} className="mr-2 text-spdm-green" />
-                    <span>Admin Panel</span>
+                    <span>{user.isOwner ? 'Owner Panel' : 'Admin Panel'}</span>
                   </DropdownMenuItem>
                 </>
               )}

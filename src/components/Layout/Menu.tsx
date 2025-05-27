@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { Menu as MenuIcon, Youtube, Gift, ShoppingBag, Bug, Gamepad } from 'lucide-react';
+import { Menu as MenuIcon, Youtube, Gift, ShoppingBag, Bug, Gamepad, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 interface MenuProps {
   isOpen: boolean;
@@ -10,6 +11,8 @@ interface MenuProps {
 }
 
 const Menu = ({ isOpen, onClose, onLoginClick, onSignupClick }: MenuProps) => {
+  const { user } = useAuth();
+  
   const menuItems = [
     {
       name: 'Shop',
@@ -38,6 +41,15 @@ const Menu = ({ isOpen, onClose, onLoginClick, onSignupClick }: MenuProps) => {
     }
   ];
 
+  // Add Admin/Owner Panel item if user has appropriate permissions
+  if (user?.isAdmin || user?.isOwner) {
+    menuItems.push({
+      name: `${user.isOwner ? 'Owner' : 'Admin'} Panel`,
+      icon: <Shield className="w-5 h-5" />,
+      href: '/admin'
+    });
+  }
+
   return (
     <>
       {/* Backdrop */}
@@ -46,14 +58,14 @@ const Menu = ({ isOpen, onClose, onLoginClick, onSignupClick }: MenuProps) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 backdrop-blur-sm md:backdrop-blur-none"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={onClose}
         />
       )}
 
       {/* Menu */}
       <motion.div
-        className={`fixed top-0 right-0 w-full md:w-80 h-full bg-spdm-dark border-l border-spdm-green/30 z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 right-0 w-full md:w-80 h-full bg-black border-l border-spdm-green/30 z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         initial={{ x: '100%' }}
@@ -73,7 +85,7 @@ const Menu = ({ isOpen, onClose, onLoginClick, onSignupClick }: MenuProps) => {
           </div>
 
           {/* Menu Items */}
-          <div className="flex-1 py-4">
+          <div className="flex-1 py-4 bg-black">
             {menuItems.map((item) => (
               <div key={item.name} className="px-4 py-2">
                 {item.submenu ? (
@@ -123,7 +135,7 @@ const Menu = ({ isOpen, onClose, onLoginClick, onSignupClick }: MenuProps) => {
 
           {/* Auth Buttons (Mobile Only) */}
           {(onLoginClick || onSignupClick) && (
-            <div className="p-4 border-t border-spdm-green/20 md:hidden">
+            <div className="p-4 border-t border-spdm-green/20 md:hidden bg-black">
               <div className="flex flex-col gap-2">
                 {onLoginClick && (
                   <button
