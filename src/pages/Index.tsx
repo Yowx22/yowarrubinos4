@@ -165,7 +165,7 @@ const Index = ({
             <div className="max-w-4xl w-full text-center relative z-10">
               <div className={`transition-all duration-700 ${loading ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}`}>
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 glow-text">
-                  <span className="text-spdm-green">YOWX</span> Team
+                  <span className="text-spdm-green">YOWX</span> MODS
                 </h1>
                 
                 <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto">
