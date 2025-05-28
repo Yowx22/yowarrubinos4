@@ -120,6 +120,18 @@ const Menu = ({ isOpen, onClose, onLoginClick, onSignupClick }: MenuProps) => {
               </div>
             ))}
 
+            {/* MediaFire Link */}
+            <a
+              href="https://www.mediafire.com/login/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 text-gray-300 hover:text-spdm-green hover:bg-spdm-green/10 px-7 py-2 mt-4"
+              onClick={onClose}
+            >
+              <img src="https://static.mediafire.com/images/favicon/favicon.ico" alt="MediaFire" className="w-5 h-5" />
+              <span>MediaFire</span>
+            </a>
+
             {/* YouTube Channel */}
             <a
               href="https://www.youtube.com/@yowxmods"

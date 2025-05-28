@@ -9,6 +9,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import { AudioPlayer } from "./components/AudioPlayer/AudioPlayer";
 import Mines from "./components/Games/Mines";
+import BugReport from "./components/BugReport/BugReport";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/afk-farm" element={<Index activeTab="afk" />} />
             <Route path="/leaderboard" element={<Index activeTab="afk" />} />
             <Route path="/games/mines" element={<Index activeTab="games" />} />
+            <Route path="/bug-report" element={<BugReport />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

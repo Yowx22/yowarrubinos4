@@ -113,6 +113,10 @@ const Purchase = ({ item, onClose }: PurchaseProps) => {
     }
   };
 
+  const handleDownload = (type: 'ipa' | 'dylib') => {
+    window.open('https://www.mediafire.com/login/', '_blank');
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm" onClick={onClose}></div>
@@ -190,19 +194,26 @@ const Purchase = ({ item, onClose }: PurchaseProps) => {
                 {keyGenerated}
               </p>
             </div>
-            
-            <a 
-              href="https://www.mediafire.com/login/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md mb-4 transition-colors"
-            >
-              Download Files
-            </a>
+
+            <div className="space-y-3">
+              <Button 
+                onClick={() => handleDownload('ipa')}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+              >
+                Download IPA
+              </Button>
+              
+              <Button 
+                onClick={() => handleDownload('dylib')}
+                className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+              >
+                Download DYLIB
+              </Button>
+            </div>
             
             <Button 
               onClick={onClose} 
-              className="w-full bg-spdm-green hover:bg-spdm-darkGreen text-black font-medium"
+              className="w-full mt-4 bg-spdm-green hover:bg-spdm-darkGreen text-black font-medium"
             >
               Close
             </Button>
