@@ -47,6 +47,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  const handleAuthError = async (error: any) => {
+    if (error.message?.includes('Invalid Refresh Token') || 
+        error.message?.includes('Refresh Token Not Found')) {
+      console.error('Auth error detected:', error.message);
+      logToDiscord(`Auth error detected: ${error.message}`, 'error');
+      
+      // Clear local state
+      setUser(null);
+      setSession(null);
+      
+      // Force sign out to clear any invalid tokens
+      await supabase.auth.signOut();
+      
+      toast({
+        title: "Session expired",
+        description: "Please log in again to continue.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const fetchUserData = async (userId: string) => {
     try {
       const { data: profileData, error: profileError } = await supabase
@@ -99,7 +120,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
       }
 
-      const { data: authUserData } = await supabase.auth.getUser();
+      const { data: authUserData, error: authUserError } = await supabase.auth.getUser();
+      if (authUserError) throw authUserError;
+      
       const userEmail = authUserData?.user?.email;
 
       const profile = profileData as UserProfile;
@@ -121,40 +144,56 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setUser(userData);
       logToDiscord(`User logged in: ${profile.username}`, 'info');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching user data:', error);
       logToDiscord(`Error fetching user data: ${JSON.stringify(error)}`, 'error');
+      await handleAuthError(error);
     }
   };
 
   useEffect(() => {
     const setupAuth = async () => {
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        (event, currentSession) => {
-          setSession(currentSession);
-          
-          if (currentSession?.user) {
-            setTimeout(() => {
-              fetchUserData(currentSession.user.id);
-            }, 0);
-          } else {
-            setUser(null);
+      try {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, currentSession) => {
+            try {
+              if (event === 'TOKEN_REFRESHED') {
+                logToDiscord('Token refreshed successfully', 'info');
+              }
+              
+              setSession(currentSession);
+              
+              if (currentSession?.user) {
+                await fetchUserData(currentSession.user.id);
+              } else {
+                setUser(null);
+              }
+            } catch (error: any) {
+              console.error('Auth state change error:', error);
+              await handleAuthError(error);
+            }
           }
-        }
-      );
+        );
 
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-      
-      if (data.session?.user) {
-        await fetchUserData(data.session.user.id);
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        
+        setSession(data.session);
+        
+        if (data.session?.user) {
+          await fetchUserData(data.session.user.id);
+        }
+        
+        setLoading(false);
+        
+        return () => {
+          subscription.unsubscribe();
+        };
+      } catch (error: any) {
+        console.error('Setup auth error:', error);
+        await handleAuthError(error);
+        setLoading(false);
       }
-      
-      setLoading(false);
-      
-      return () => {
-        subscription.unsubscribe();
-      };
     };
 
     setupAuth();
@@ -172,6 +211,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Error updating user presence with RPC:', error);
         logToDiscord(`Error updating user presence: ${error.message}`, 'error');
+        await handleAuthError(error);
       }
       
       const channel = supabase.channel('presence-updates');
@@ -184,6 +224,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error: any) {
       console.error('Error updating user presence:', error);
       logToDiscord(`Error updating user presence: ${error.message}`, 'error');
+      await handleAuthError(error);
     }
   };
 
@@ -279,6 +320,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Error in updateUserCoins:', error);
         logToDiscord(`Error updating balance via RPC: ${error.message}`, 'error');
+        await handleAuthError(error);
         throw error;
       }
 
@@ -291,6 +333,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (walletError) {
         console.error('Error fetching updated wallet:', walletError);
         logToDiscord(`Error fetching updated wallet: ${walletError.message}`, 'error');
+        await handleAuthError(walletError);
         
         setUser(prev => prev ? {
           ...prev,
