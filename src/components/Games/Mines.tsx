@@ -104,6 +104,7 @@ const Mines: React.FC = () => {
       setRevealedCount(0);
       setGameOver(false);
       setHasWon(false);
+      setIsPlaying(true);
     } catch (error) {
       console.error('Error initializing grid:', error);
       toast.error('Failed to initialize game');
@@ -193,12 +194,20 @@ const Mines: React.FC = () => {
       const success = await spendCoins(betAmount, 'Mines game bet');
       if (success) {
         await initializeGrid();
-        setIsPlaying(true);
       }
     } catch (error) {
       console.error('Error starting game:', error);
       toast.error('Failed to start game');
     }
+  };
+
+  const playAgain = () => {
+    setGrid([]);
+    setIsPlaying(false);
+    setGameOver(false);
+    setHasWon(false);
+    setRevealedCount(0);
+    setCurrentMultiplier(getBaseMultiplier(minesCount));
   };
 
   const cashOut = async () => {
@@ -250,17 +259,26 @@ const Mines: React.FC = () => {
               />
             </div>
 
-            <Button
-              onClick={isPlaying ? cashOut : startGame}
-              disabled={gameOver}
-              className={`w-full ${
-                isPlaying
-                  ? 'bg-yellow-500 hover:bg-yellow-600 text-black'
-                  : 'bg-spdm-green hover:bg-spdm-darkGreen text-black'
-              }`}
-            >
-              {isPlaying ? 'Cash Out' : 'Place Bet'}
-            </Button>
+            {gameOver ? (
+              <Button
+                onClick={playAgain}
+                className="w-full bg-spdm-green hover:bg-spdm-darkGreen text-black"
+              >
+                Play Again
+              </Button>
+            ) : (
+              <Button
+                onClick={isPlaying ? cashOut : startGame}
+                disabled={gameOver}
+                className={`w-full ${
+                  isPlaying
+                    ? 'bg-yellow-500 hover:bg-yellow-600 text-black'
+                    : 'bg-spdm-green hover:bg-spdm-darkGreen text-black'
+                }`}
+              >
+                {isPlaying ? 'Cash Out' : 'Place Bet'}
+              </Button>
+            )}
           </div>
 
           {/* Game Stats */}

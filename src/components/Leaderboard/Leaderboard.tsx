@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { motion } from 'framer-motion';
 
 interface LeaderboardEntry {
   username: string;
@@ -16,29 +17,30 @@ const Leaderboard = () => {
 
   useEffect(() => {
     fetchLeaderboard();
+    // Set up interval to refresh leaderboard every minute
+    const interval = setInterval(fetchLeaderboard, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchLeaderboard = async () => {
     try {
-      const { data, error } = await supabase
-        .from('leaderboard')
+      const { data: walletData, error: walletError } = await supabase
+        .from('wallets')
         .select(`
-          points,
-          period_start,
-          period_end,
+          balance,
           profiles:profiles(username)
         `)
-        .order('points', { ascending: false })
+        .order('balance', { ascending: false })
         .limit(10);
 
-      if (error) throw error;
+      if (walletError) throw walletError;
 
-      if (data) {
-        const formattedData = data.map(entry => ({
+      if (walletData) {
+        const formattedData = walletData.map(entry => ({
           username: entry.profiles.username,
-          points: entry.points,
-          period_start: entry.period_start,
-          period_end: entry.period_end
+          points: entry.balance,
+          period_start: new Date().toISOString(),
+          period_end: new Date().toISOString()
         }));
         setLeaderboard(formattedData);
       }
@@ -66,23 +68,31 @@ const Leaderboard = () => {
             <tr className="text-left text-gray-400">
               <th className="pb-4">Rank</th>
               <th className="pb-4">Username</th>
-              <th className="pb-4 text-right">Points</th>
+              <th className="pb-4 text-right">Coins</th>
             </tr>
           </thead>
           <tbody>
             {leaderboard.map((entry, index) => (
-              <tr 
+              <motion.tr 
                 key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
                 className="border-t border-gray-700"
               >
                 <td className="py-4 text-gray-300">#{index + 1}</td>
                 <td className="py-4 text-spdm-green font-medium">
                   {entry.username}
+                  {user?.username === entry.username && (
+                    <span className="ml-2 text-xs bg-spdm-green/20 text-spdm-green px-2 py-1 rounded-full">
+                      You
+                    </span>
+                  )}
                 </td>
                 <td className="py-4 text-right text-gray-300">
                   {entry.points.toLocaleString()}
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>
