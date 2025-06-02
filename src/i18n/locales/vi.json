@@ -1,0 +1,19 @@
+{
+  "auth": {
+    "login": "Đăng nhập",
+    "signup": "Đăng ký",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "username": "Tên người dùng",
+    "loginButton": "Đăng nhập",
+    "signupButton": "Tạo tài khoản",
+    "loggingIn": "Đang đăng nhập...",
+    "signingUp": "Đang tạo tài khoản..."
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công"
+  }
+}

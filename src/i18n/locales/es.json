@@ -1,0 +1,19 @@
+{
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "username": "Nombre de usuario",
+    "loginButton": "Iniciar sesión",
+    "signupButton": "Crear cuenta",
+    "loggingIn": "Iniciando sesión...",
+    "signingUp": "Creando cuenta..."
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  }
+}

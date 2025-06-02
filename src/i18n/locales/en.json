@@ -1,0 +1,19 @@
+{
+  "auth": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "username": "Username",
+    "loginButton": "Login",
+    "signupButton": "Create Account",
+    "loggingIn": "Logging in...",
+    "signingUp": "Creating account..."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}

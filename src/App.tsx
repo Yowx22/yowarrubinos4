@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import { AudioPlayer } from "./components/AudioPlayer/AudioPlayer";
 import Mines from "./components/Games/Mines";
 import BugReport from "./components/BugReport/BugReport";
+import { LanguageSwitcher } from "./components/LanguageSwitcher/LanguageSwitcher";
 
 const queryClient = new QueryClient();
 
@@ -32,8 +33,9 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <AudioPlayer />
+          <LanguageSwitcher />
         </BrowserRouter>
-        <AudioPlayer />
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
