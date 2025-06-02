@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -10,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email" }),
@@ -38,6 +38,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const [authType, setAuthType] = useState<'login' | 'signup'>(type);
   const { login, signup } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const loginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -167,7 +168,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
             >
-              {authType === 'login' ? 'Login' : 'Create Account'}
+              {authType === 'login' ? t('auth.login') : t('auth.signup')}
             </motion.h2>
             <motion.button 
               onClick={onClose}
@@ -190,7 +191,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                 exit="hidden"
               >
                 <motion.div className="space-y-2" variants={inputVariants} custom={0}>
-                  <Label htmlFor="email" className="text-spdm-green">Email</Label>
+                  <Label htmlFor="email" className="text-spdm-green">{t('auth.email')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -203,7 +204,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   )}
                 </motion.div>
                 <motion.div className="space-y-2" variants={inputVariants} custom={1}>
-                  <Label htmlFor="password" className="text-spdm-green">Password</Label>
+                  <Label htmlFor="password" className="text-spdm-green">{t('auth.password')}</Label>
                   <Input
                     id="password"
                     type="password"
@@ -221,7 +222,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     className="w-full bg-spdm-green hover:bg-spdm-darkGreen text-black font-medium"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Logging in..." : "Login"}
+                    {isSubmitting ? t('auth.loggingIn') : t('auth.loginButton')}
                   </Button>
                 </motion.div>
                 <motion.p 
@@ -229,13 +230,13 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   variants={inputVariants} 
                   custom={3}
                 >
-                  Don't have an account?{" "}
+                  {t('auth.noAccount')}{" "}
                   <button
                     type="button"
                     onClick={toggleAuthType}
                     className="text-spdm-green hover:underline"
                   >
-                    Sign up
+                    {t('auth.signupLink')}
                   </button>
                 </motion.p>
               </motion.form>
@@ -249,12 +250,12 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                 exit="hidden"
               >
                 <motion.div className="space-y-2" variants={inputVariants} custom={0}>
-                  <Label htmlFor="username" className="text-spdm-green">Username</Label>
+                  <Label htmlFor="username" className="text-spdm-green">{t('auth.username')}</Label>
                   <Input
                     id="username"
                     type="text"
                     className="bg-spdm-gray text-white border-spdm-green/30 focus:border-spdm-green"
-                    placeholder="Your username"
+                    placeholder={t('auth.usernamePlaceholder')}
                     {...signupForm.register("username")}
                   />
                   {signupForm.formState.errors.username && (
@@ -262,7 +263,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   )}
                 </motion.div>
                 <motion.div className="space-y-2" variants={inputVariants} custom={1}>
-                  <Label htmlFor="email" className="text-spdm-green">Email</Label>
+                  <Label htmlFor="email" className="text-spdm-green">{t('auth.email')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -275,7 +276,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   )}
                 </motion.div>
                 <motion.div className="space-y-2" variants={inputVariants} custom={2}>
-                  <Label htmlFor="password" className="text-spdm-green">Password</Label>
+                  <Label htmlFor="password" className="text-spdm-green">{t('auth.password')}</Label>
                   <Input
                     id="password"
                     type="password"
@@ -288,7 +289,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   )}
                 </motion.div>
                 <motion.div className="space-y-2" variants={inputVariants} custom={3}>
-                  <Label htmlFor="confirmPassword" className="text-spdm-green">Confirm Password</Label>
+                  <Label htmlFor="confirmPassword" className="text-spdm-green">{t('auth.confirmPassword')}</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
@@ -306,7 +307,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     className="w-full bg-spdm-green hover:bg-spdm-darkGreen text-black font-medium"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Creating account..." : "Sign Up"}
+                    {isSubmitting ? t('auth.creatingAccount') : t('auth.signupButton')}
                   </Button>
                 </motion.div>
                 <motion.p 
@@ -314,13 +315,13 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   variants={inputVariants}
                   custom={5}
                 >
-                  Already have an account?{" "}
+                  {t('auth.haveAccount')}{" "}
                   <button
                     type="button"
                     onClick={toggleAuthType}
                     className="text-spdm-green hover:underline"
                   >
-                    Log in
+                    {t('auth.loginLink')}
                   </button>
                 </motion.p>
               </motion.form>
